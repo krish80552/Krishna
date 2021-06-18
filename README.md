@@ -1,3 +1,3 @@
 # Krishna
 
-This is My first repo in github
+This is My first repo in git
