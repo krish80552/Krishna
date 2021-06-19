@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Stop_process') {
+            steps {
+                sh '''
+                PID=$(ps -ef | grep -i tomcat | grep -i java | awk '{print $2}')
+                sudo kill -9 $PID
+                '''
+            }
+        }
+                
+        stage('download_artifact') {
+            steps {
+                sh """
+                sudo aws s3 cp s3://krishnabatch6/webapp.war /opt/apache-tomcat-8.5.68/webapps/
+                """
+            }
+        }
+                
+        stage('start_tomcat') {
+            steps {
+                sh """
+                sudo sh /opt/apache-tomcat-8.5.68/bin/startup.sh
+                """
+            }
+                
+        }
+    }
+}
