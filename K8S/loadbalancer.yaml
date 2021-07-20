@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: my-service
+spec:
+  selector:
+    role: myrole
+  ports:
+  - port: 80
+  type: LoadBalancer
