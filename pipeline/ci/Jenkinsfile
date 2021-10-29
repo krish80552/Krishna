@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('cloning') {
+            steps {
+                sh '''
+                git clone https://github.com/KrishnaMouli/Krishna.git
+                '''
+            }
+        }
+        
+        stage('generating') {
+            steps {
+                sh '''
+                cd Krishna/basic_code
+                M2_HOME='/opt/apache-maven-3.6.3'
+                PATH="$M2_HOME/bin:$PATH"
+                export PATH
+                mvn clean install
+                '''
+            }
+        }
+        
+        stage('uploading') {
+            steps {
+                sh '''
+                aws s3 cp Krishna/basic_code/webapp/target/webapp.war s3://chethanbng/
+                '''
+            }
+        }
+          
+    }
+    post { 
+        always { 
+            cleanWs()
+        }
+    }
+}
